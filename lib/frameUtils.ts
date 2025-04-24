@@ -24,9 +24,10 @@ export function getFrameHtml(state: GameState): string {
   console.log("[getFrameHtml] State received:", JSON.stringify(state)); // Log incoming state
   console.log("[getFrameHtml] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
 
-  // Simplified URL for testing - no state or cache buster
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image`;
-  console.log("[getFrameHtml] Generated Image URL (Simplified):", imageUrl);
+  // Pass state as a query parameter to the image route
+  const stateParam = encodeURIComponent(JSON.stringify(state));
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${stateParam}`;
+  console.log("[getFrameHtml] Generated Image URL:", imageUrl);
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   let buttons = "";
@@ -65,9 +66,10 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   console.log("[getFrameMetadata] State received:", JSON.stringify(state)); // Log incoming state
   console.log("[getFrameMetadata] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
 
-  // Simplified URL for testing - no state or cache buster
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image`;
-  console.log("[getFrameMetadata] Generated Image URL (Simplified):", imageUrl);
+  // Pass state as a query parameter to the image route
+  const stateParam = encodeURIComponent(JSON.stringify(state));
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${stateParam}`;
+  console.log("[getFrameMetadata] Generated Image URL:", imageUrl);
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   const metadata: Record<string, string> = {
