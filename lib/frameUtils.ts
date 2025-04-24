@@ -24,13 +24,9 @@ export function getFrameHtml(state: GameState): string {
   console.log("[getFrameHtml] State received:", JSON.stringify(state)); // Log incoming state
   console.log("[getFrameHtml] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
 
-  const serializedState = JSON.stringify(state);
-  console.log("[getFrameHtml] Serialized State:", serializedState);
-
-  const cacheBuster = Date.now(); // Add cache buster
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}&t=${cacheBuster}`;
-  console.log("[getFrameHtml] Generated Image URL:", imageUrl); // Log the final URL
-
+  // Simplified URL for testing - no state or cache buster
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image`;
+  console.log("[getFrameHtml] Generated Image URL (Simplified):", imageUrl);
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   let buttons = "";
@@ -69,13 +65,9 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   console.log("[getFrameMetadata] State received:", JSON.stringify(state)); // Log incoming state
   console.log("[getFrameMetadata] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
 
-  const serializedState = JSON.stringify(state);
-  console.log("[getFrameMetadata] Serialized State:", serializedState);
-
-  const cacheBuster = Date.now(); // Add cache buster
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}&t=${cacheBuster}`;
-  console.log("[getFrameMetadata] Generated Image URL:", imageUrl); // Log the final URL
-
+  // Simplified URL for testing - no state or cache buster
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image`;
+  console.log("[getFrameMetadata] Generated Image URL (Simplified):", imageUrl);
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   const metadata: Record<string, string> = {
@@ -85,7 +77,7 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
     "fc:frame:image": imageUrl,
     "fc:frame:image:aspect_ratio": "1:1",
     "fc:frame:post_url": postUrl,
-    "fc:frame:state": serializedState,
+    "fc:frame:state": JSON.stringify(state),
   };
 
   if (!state.gameOver) {
