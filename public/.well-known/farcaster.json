@@ -1,0 +1,9 @@
+{
+  "frame": {
+    "name": "Tic-Tac-Toe",
+    "iconUrl": "https://tic-tac-toe-mu-five-58.vercel.app/icon.png",
+    "splashImageUrl": "https://tic-tac-toe-mu-five-58.vercel.app/splash.png",
+    "splashBackgroundColor": "#ffffff",
+    "homeUrl": "https://tic-tac-toe-mu-five-58.vercel.app/api/frame"
+  }
+}
