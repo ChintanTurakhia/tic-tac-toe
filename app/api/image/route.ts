@@ -60,7 +60,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // ALWAYS generate the initial state image for this test
     const initialState = createInitialState();
     const svg = generateSvg(initialState);
-    console.log("[/api/image] Generated SVG string (initial board):"); // Removed SVG logging for brevity
+    console.log("[/api/image] Generated SVG string (initial board):", svg);
 
     return new NextResponse(svg, {
       status: 200,
