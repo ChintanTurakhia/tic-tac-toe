@@ -51,28 +51,40 @@ function generateSvg(state: GameState): string {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  console.log("[/api/image] GET request received");
   let state: GameState;
   try {
     const { searchParams } = new URL(req.url);
     const stateString = searchParams.get("state");
+    console.log("[/api/image] Received stateString:", stateString);
 
     if (stateString) {
       try {
-        state = JSON.parse(decodeURIComponent(stateString));
+        const decodedStateString = decodeURIComponent(stateString);
+        console.log("[/api/image] Decoded stateString:", decodedStateString);
+        state = JSON.parse(decodedStateString);
+        console.log("[/api/image] Parsed state:", JSON.stringify(state));
         // Basic validation
         if (!state || typeof state.board === "undefined") {
           throw new Error("Invalid state structure");
         }
-      } catch (e) {
-        console.error("Error parsing state string:", e);
+      } catch (e: unknown) {
+        console.error(
+          "[/api/image] Error parsing state string:",
+          e instanceof Error ? e.message : String(e),
+        );
         state = createInitialState(); // Default to initial state on parse error
+        console.log("[/api/image] Using default state due to parse error.");
       }
     } else {
-      console.log("No state param found, using initial state for image.");
+      console.log(
+        "[/api/image] No state param found, using initial state for image.",
+      );
       state = createInitialState();
     }
 
     const svg = generateSvg(state);
+    console.log("[/api/image] Generated SVG string:", svg);
 
     return new NextResponse(svg, {
       status: 200,
@@ -81,8 +93,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         "Cache-Control": "no-cache, no-store, must-revalidate", // Prevent caching of the dynamic image
       },
     });
-  } catch (error) {
-    console.error("Error generating SVG:", error);
+  } catch (error: unknown) {
+    console.error(
+      "[/api/image] Error generating SVG:",
+      error instanceof Error ? error.message : String(error),
+    );
     // Return a placeholder or error SVG
     const errorSvg = `
             <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
