@@ -50,6 +50,7 @@ function generateSvg(state: GameState): string {
     `;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: NextRequest): Promise<NextResponse> {
   console.log(
     "[/api/image] GET request received (Simplified - returning initial board)",
