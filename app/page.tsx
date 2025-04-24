@@ -132,11 +132,24 @@ export default function App() {
 
           <main className="flex-1 flex flex-col items-center justify-center">
             <h1 className="text-2xl font-bold mb-4">Tic-Tac-Toe Frame</h1>
-            <p className="text-center">
+            <div className="mb-6">
+              <img
+                src={`https://tic-tac-toe-mu-five-58.vercel.app/api/image?state=${encodeURIComponent(JSON.stringify(createInitialState()))}`}
+                alt="Tic-Tac-Toe Game Board"
+                width="300"
+                height="300"
+                className="border border-gray-300 rounded-md"
+              />
+            </div>
+            <p className="text-center font-medium">
+              This is a preview of the Tic-Tac-Toe game board.
+            </p>
+            <p className="text-center mt-2">
               This is a Farcaster Frame for playing Tic-Tac-Toe.
             </p>
             <p className="text-center mt-2">
-              Share the link in a cast to play!
+              Share the link in a cast to play! The game is played through the
+              Farcaster Frame, not directly on this website.
             </p>
           </main>
 
