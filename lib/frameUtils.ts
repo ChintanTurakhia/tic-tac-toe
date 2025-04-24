@@ -21,8 +21,15 @@ export interface FrameRequest {
 
 // Function to generate frame HTML meta tags
 export function getFrameHtml(state: GameState): string {
+  console.log("[getFrameHtml] State received:", JSON.stringify(state)); // Log incoming state
+  console.log("[getFrameHtml] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
+
   const serializedState = JSON.stringify(state);
+  console.log("[getFrameHtml] Serialized State:", serializedState);
+
   const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}`;
+  console.log("[getFrameHtml] Generated Image URL:", imageUrl); // Log the final URL
+
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   let buttons = "";
@@ -58,8 +65,15 @@ export function getFrameHtml(state: GameState): string {
 
 // Helper to extract meta tags for embedding in React Head
 export function getFrameMetadata(state: GameState): Record<string, string> {
+  console.log("[getFrameMetadata] State received:", JSON.stringify(state)); // Log incoming state
+  console.log("[getFrameMetadata] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
+
   const serializedState = JSON.stringify(state);
+  console.log("[getFrameMetadata] Serialized State:", serializedState);
+
   const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}`;
+  console.log("[getFrameMetadata] Generated Image URL:", imageUrl); // Log the final URL
+
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   const metadata: Record<string, string> = {
