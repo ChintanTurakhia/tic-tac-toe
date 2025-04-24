@@ -1,0 +1,43 @@
+---
+description: when building a frame or mini-app
+globs: 
+alwaysApply: false
+---
+# Farcaster Mini Apps
+
+## Docs
+
+- [Getting Started](/docs/getting-started): Mini apps are web apps built with HTML, CSS, and Javascript that can be discovered
+  and used within Farcaster clients. You can use an SDK to access native
+  Farcaster features, like authentication, sending notifications, and interacting
+  with the user's wallet.
+- [Specification](/docs/specification): A Mini App is a web application that renders inside a Farcaster client.
+- [Authenticating users](/docs/guides/auth): An app can use the [signIn](/docs/sdk/actions/sign-in) to get a [Sign in with
+  Farcaster (SIWF)](https://docs.farcaster.xyz/developers/siwf/) authentication credential for the user.
+- [Loading your app](/docs/guides/loading): When users open Mini Apps in Farcaster they are shown a branded splash screen
+  instead of a blank loading page like they would in a browser. Once your interface
+  is ready to show the splash screen can be hidden.
+- [Sending Notifications](/docs/guides/notifications): Mini Apps can send notifications to users who have added the Mini App to
+  their Farcaster client and enabled notifications.
+- [Publishing your app](/docs/guides/publishing): Publishing Mini Apps involves providing information like who developed the app,
+  how it should be displayed, and what its capabilities are.
+- [Sharing your app](/docs/guides/sharing): Mini Apps can be shared in social feeds using special embeds that let users
+  interact with an app directly from their feed.
+- [Interacting with Wallets](/docs/guides/wallets): Mini Apps can interact with a user's crypto wallet without needing to worry
+  about popping open "select your wallet" dialogs or flakey connections.
+- [What's New](/docs/sdk/changelog): Added `noindex` field to manifest (see [discussions/204](https://github.com/farcasterxyz/miniapps/discussions/204))
+- [Context](/docs/sdk/context): When your app is opened it can access information about the session from
+  `sdk.context`. This object provides basic information about the user, the
+  client, and where your app was opened from:
+- [Client Events](/docs/sdk/events): When a user interacts with your app events will be sent from the Farcaster
+  client to your application client.
+- [Wallet](/docs/sdk/wallet): ![users taking onchain action from app](/transaction-preview.png)
+- [addFrame](/docs/sdk/actions/add-frame): Prompts the user to add the app.
+- [close](/docs/sdk/actions/close): Closes the mini app.
+- [composeCast](/docs/sdk/actions/compose-cast): Open the cast composer with a suggested cast. The user will be able to modify
+  the cast before posting it.
+- [openUrl](/docs/sdk/actions/open-url): Opens an external URL.
+- [ready](/docs/sdk/actions/ready): Hides the Splash Screen. Read the [guide on loading your app](/docs/guides/loading) for best practices.
+- [signIn](/docs/sdk/actions/sign-in): Request a [Sign in with Farcaster
+  (SIWF)](https://docs.farcaster.xyz/developers/siwf/) credential from the user.
+- [viewProfile](/docs/sdk/actions/view-profile): Displays a user's Farcaster profile.
