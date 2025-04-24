@@ -16,6 +16,7 @@ import { FrameRequest, getFrameHtml } from "../../../lib/frameUtils"; // Import 
 
 // Removed local FrameRequest/FrameMessage interfaces if they were still here
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(_req: NextRequest): Promise<NextResponse> {
   console.log("GET request received for initial frame");
   const initialState = createInitialState();
