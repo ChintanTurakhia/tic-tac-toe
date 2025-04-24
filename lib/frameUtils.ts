@@ -27,7 +27,8 @@ export function getFrameHtml(state: GameState): string {
   const serializedState = JSON.stringify(state);
   console.log("[getFrameHtml] Serialized State:", serializedState);
 
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}`;
+  const cacheBuster = Date.now(); // Add cache buster
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}&t=${cacheBuster}`;
   console.log("[getFrameHtml] Generated Image URL:", imageUrl); // Log the final URL
 
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
@@ -71,7 +72,8 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   const serializedState = JSON.stringify(state);
   console.log("[getFrameMetadata] Serialized State:", serializedState);
 
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}`;
+  const cacheBuster = Date.now(); // Add cache buster
+  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${encodeURIComponent(serializedState)}&t=${cacheBuster}`;
   console.log("[getFrameMetadata] Generated Image URL:", imageUrl); // Log the final URL
 
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
