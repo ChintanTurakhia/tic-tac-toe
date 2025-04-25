@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GameState, createInitialState } from "../../../lib/game";
+import {
+  GameState,
+  createInitialState,
+  getChoiceEmoji,
+  getResultText,
+} from "../../../lib/game";
 
 export async function GET(req: NextRequest) {
   const timestamp = new Date().toISOString();
@@ -22,8 +27,8 @@ export async function GET(req: NextRequest) {
     state = createInitialState();
   }
 
-  // Generate SVG for the game board
-  const svg = generateGameBoardSVG(state);
+  // Generate SVG for the game
+  const svg = generateGameSVG(state);
 
   return new NextResponse(svg, {
     status: 200,
@@ -34,103 +39,118 @@ export async function GET(req: NextRequest) {
   });
 }
 
-function generateGameBoardSVG(state: GameState): string {
-  const { board, winner, gameOver } = state;
-
+function generateGameSVG(state: GameState): string {
   // SVG dimensions
   const width = 600;
   const height = 600;
-  const cellSize = 200;
-  const lineWidth = 10;
-  const xoSize = 60; // Size of X and O symbols
+  const emojiSize = 80;
+
+  // Colors
+  const bgColor = "#1E293B"; // Dark blue background
+  const textColor = "#FFFFFF"; // White text
+  const accentColor = "#3B82F6"; // Blue accent
+  const winColor = "#10B981"; // Green for win
+  const loseColor = "#EF4444"; // Red for lose
+  const drawColor = "#F59E0B"; // Amber for draw
 
   // Start SVG
   let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${width}" height="${height}" fill="#f0f0f0" />
+    <rect width="${width}" height="${height}" fill="${bgColor}" />
     
-    <!-- Board grid lines -->
-    <g stroke="#333" stroke-width="${lineWidth}">
-      <!-- Vertical lines -->
-      <line x1="${cellSize}" y1="0" x2="${cellSize}" y2="${height}" />
-      <line x1="${2 * cellSize}" y1="0" x2="${2 * cellSize}" y2="${height}" />
-      
-      <!-- Horizontal lines -->
-      <line x1="0" y1="${cellSize}" x2="${width}" y2="${cellSize}" />
-      <line x1="0" y1="${2 * cellSize}" x2="${width}" y2="${2 * cellSize}" />
-    </g>
+    <!-- Title -->
+    <text x="${width / 2}" y="60" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${textColor}" text-anchor="middle">Rock Paper Scissors</text>
     
-    <!-- Game pieces -->
+    <!-- Score -->
+    <text x="${width / 2}" y="110" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Round ${state.round} of 5 | Score: You ${state.playerScore} - ${state.computerScore} Computer</text>
+    
+    <!-- Game area -->
     <g>`;
 
-  // Add position indicators and X's and O's
-  const positions = [
-    "Top Left",
-    "Top Center",
-    "Top Right",
-    "Middle Left",
-    "Middle Center",
-    "Middle Right",
-    "Bottom Left",
-    "Bottom Center",
-    "Bottom Right",
-  ];
+  if (state.playerChoice === null) {
+    // Initial state - show instructions
+    svg += `
+      <text x="${width / 2}" y="${height / 2}" font-family="Arial, sans-serif" font-size="32" fill="${textColor}" text-anchor="middle">Choose your move!</text>
+      <text x="${width / 2}" y="${height / 2 + 60}" font-family="Arial, sans-serif" font-size="24" fill="${accentColor}" text-anchor="middle">👊 Rock | ✋ Paper | ✌️ Scissors</text>
+    `;
+  } else {
+    // Show choices and result
+    const playerEmoji = getChoiceEmoji(state.playerChoice);
+    const computerEmoji = getChoiceEmoji(state.computerChoice);
+    const resultText = getResultText(state.result);
 
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 3; col++) {
-      const cell = board[row][col];
-      const centerX = col * cellSize + cellSize / 2;
-      const centerY = row * cellSize + cellSize / 2;
-      const posIndex = row * 3 + col;
-      const posName = positions[posIndex];
-      const buttonNumber = posIndex + 1;
+    let resultColor = accentColor;
+    if (state.result === "win") resultColor = winColor;
+    if (state.result === "lose") resultColor = loseColor;
+    if (state.result === "draw") resultColor = drawColor;
 
-      if (cell === "X") {
-        // Draw X
-        svg += `
-        <g stroke="#FF5722" stroke-width="${lineWidth}" stroke-linecap="round">
-          <line x1="${centerX - xoSize}" y1="${centerY - xoSize}" x2="${centerX + xoSize}" y2="${centerY + xoSize}" />
-          <line x1="${centerX + xoSize}" y1="${centerY - xoSize}" x2="${centerX - xoSize}" y2="${centerY + xoSize}" />
-        </g>`;
-      } else if (cell === "O") {
-        // Draw O
-        svg += `
-        <circle cx="${centerX}" cy="${centerY}" r="${xoSize}" fill="none" stroke="#2196F3" stroke-width="${lineWidth}" />`;
-      } else if (!gameOver) {
-        // For empty cells, add position indicator if game is not over
-        svg += `
-        <text x="${centerX}" y="${centerY - 15}" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">${posName}</text>
-        <text x="${centerX}" y="${centerY + 15}" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#666" text-anchor="middle">${buttonNumber}</text>`;
-      }
-    }
+    // Player choice
+    svg += `
+      <g>
+        <text x="${width / 4}" y="${height / 2 - 80}" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">You chose:</text>
+        <text x="${width / 4}" y="${height / 2}" font-family="Arial, sans-serif" font-size="${emojiSize}" text-anchor="middle">${playerEmoji}</text>
+        <text x="${width / 4}" y="${height / 2 + 80}" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">${state.playerChoice}</text>
+      </g>
+    `;
+
+    // Computer choice
+    svg += `
+      <g>
+        <text x="${(3 * width) / 4}" y="${height / 2 - 80}" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Computer chose:</text>
+        <text x="${(3 * width) / 4}" y="${height / 2}" font-family="Arial, sans-serif" font-size="${emojiSize}" text-anchor="middle">${computerEmoji}</text>
+        <text x="${(3 * width) / 4}" y="${height / 2 + 80}" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">${state.computerChoice}</text>
+      </g>
+    `;
+
+    // VS in the middle
+    svg += `
+      <text x="${width / 2}" y="${height / 2}" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${accentColor}" text-anchor="middle">VS</text>
+    `;
+
+    // Result
+    svg += `
+      <rect x="100" y="${height - 150}" width="${width - 200}" height="80" rx="15" fill="rgba(0,0,0,0.3)" />
+      <text x="${width / 2}" y="${height - 100}" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="${resultColor}" text-anchor="middle">${resultText}</text>
+    `;
   }
 
-  // Add game status text
-  if (gameOver) {
-    let statusText = "";
-    let statusColor = "#333";
+  // Game over state
+  if (state.gameOver) {
+    let finalResult = "";
+    let finalColor = accentColor;
 
-    if (winner === "X") {
-      statusText = "X Wins!";
-      statusColor = "#FF5722";
-    } else if (winner === "O") {
-      statusText = "O Wins!";
-      statusColor = "#2196F3";
-    } else if (winner === "draw") {
-      statusText = "It's a Draw!";
-      statusColor = "#9C27B0";
+    if (state.playerScore > state.computerScore) {
+      finalResult = "You Win The Game!";
+      finalColor = winColor;
+    } else if (state.playerScore < state.computerScore) {
+      finalResult = "Computer Wins The Game!";
+      finalColor = loseColor;
+    } else {
+      finalResult = "The Game Is A Draw!";
+      finalColor = drawColor;
     }
 
     svg += `
-    <rect x="0" y="${height - 80}" width="${width}" height="80" fill="rgba(255,255,255,0.8)" />
-    <text x="${width / 2}" y="${height - 30}" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="${statusColor}" text-anchor="middle">${statusText}</text>`;
-  } else {
-    // Show whose turn it is
-    const turnText = `${state.currentPlayer}'s Turn`;
-    const turnColor = state.currentPlayer === "X" ? "#FF5722" : "#2196F3";
+      <rect x="0" y="0" width="${width}" height="${height}" fill="rgba(0,0,0,0.7)" />
+      <rect x="50" y="${height / 2 - 100}" width="${width - 100}" height="200" rx="20" fill="${bgColor}" stroke="${finalColor}" stroke-width="4" />
+      <text x="${width / 2}" y="${height / 2 - 30}" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${finalColor}" text-anchor="middle">Game Over</text>
+      <text x="${width / 2}" y="${height / 2 + 30}" font-family="Arial, sans-serif" font-size="28" fill="${textColor}" text-anchor="middle">${finalResult}</text>
+      <text x="${width / 2}" y="${height / 2 + 80}" font-family="Arial, sans-serif" font-size="24" fill="${accentColor}" text-anchor="middle">Final Score: You ${state.playerScore} - ${state.computerScore} Computer</text>
+    `;
+  }
 
+  // Instructions for buttons
+  if (!state.gameOver && state.playerChoice === null) {
     svg += `
-    <rect x="0" y="${height - 60}" width="${width}" height="60" fill="rgba(255,255,255,0.8)" />
-    <text x="${width / 2}" y="${height - 20}" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="${turnColor}" text-anchor="middle">${turnText}</text>`;
+      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click a button below to make your choice</text>
+    `;
+  } else if (!state.gameOver && state.playerChoice !== null) {
+    svg += `
+      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Next Round" to continue</text>
+    `;
+  } else {
+    svg += `
+      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Play Again" to start a new game</text>
+    `;
   }
 
   // Close SVG tags

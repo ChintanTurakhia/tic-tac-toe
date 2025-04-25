@@ -1,175 +1,113 @@
-export type Player = "X" | "O";
-export type CellValue = Player | null;
-export type Board = CellValue[][];
-export type Position = { row: number; col: number };
+export type Choice = "rock" | "paper" | "scissors" | null;
+export type Result = "win" | "lose" | "draw" | null;
 
 export type GameState = {
-  board: Board;
-  currentPlayer: Player;
-  winner: Player | "draw" | null;
+  playerChoice: Choice;
+  computerChoice: Choice;
+  result: Result;
+  round: number;
+  playerScore: number;
+  computerScore: number;
   gameOver: boolean;
 };
 
-const BOARD_SIZE = 3;
-
 export function createInitialState(): GameState {
   return {
-    board: Array(BOARD_SIZE)
-      .fill(null)
-      .map(() => Array(BOARD_SIZE).fill(null)),
-    currentPlayer: "X",
-    winner: null,
+    playerChoice: null,
+    computerChoice: null,
+    result: null,
+    round: 1,
+    playerScore: 0,
+    computerScore: 0,
     gameOver: false,
   };
 }
 
-export function getAvailableMoves(board: Board): Position[] {
-  const moves: Position[] = [];
-  for (let row = 0; row < BOARD_SIZE; row++) {
-    for (let col = 0; col < BOARD_SIZE; col++) {
-      if (board[row][col] === null) {
-        moves.push({ row, col });
-      }
-    }
-  }
-  return moves;
+export function getComputerChoice(): Choice {
+  const choices: Choice[] = ["rock", "paper", "scissors"];
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
 }
 
-export function checkWinner(board: Board): Player | "draw" | null {
-  // Check rows
-  for (let row = 0; row < BOARD_SIZE; row++) {
-    if (
-      board[row][0] &&
-      board[row][0] === board[row][1] &&
-      board[row][0] === board[row][2]
-    ) {
-      return board[row][0];
-    }
-  }
+export function determineWinner(
+  playerChoice: Choice,
+  computerChoice: Choice,
+): Result {
+  if (!playerChoice || !computerChoice) return null;
 
-  // Check columns
-  for (let col = 0; col < BOARD_SIZE; col++) {
-    if (
-      board[0][col] &&
-      board[0][col] === board[1][col] &&
-      board[0][col] === board[2][col]
-    ) {
-      return board[0][col];
-    }
-  }
-
-  // Check diagonals
-  if (
-    board[0][0] &&
-    board[0][0] === board[1][1] &&
-    board[0][0] === board[2][2]
-  ) {
-    return board[0][0];
-  }
-  if (
-    board[0][2] &&
-    board[0][2] === board[1][1] &&
-    board[0][2] === board[2][0]
-  ) {
-    return board[0][2];
-  }
-
-  // Check for draw
-  if (getAvailableMoves(board).length === 0) {
+  if (playerChoice === computerChoice) {
     return "draw";
   }
 
-  // No winner yet
-  return null;
+  if (
+    (playerChoice === "rock" && computerChoice === "scissors") ||
+    (playerChoice === "paper" && computerChoice === "rock") ||
+    (playerChoice === "scissors" && computerChoice === "paper")
+  ) {
+    return "win";
+  }
+
+  return "lose";
 }
 
-export function makeMove(
-  state: GameState,
-  row: number,
-  col: number,
-): GameState {
-  if (state.gameOver || state.board[row]?.[col] !== null) {
-    // Invalid move or game already over
+export function makeChoice(state: GameState, playerChoice: Choice): GameState {
+  if (state.gameOver) {
     return state;
   }
 
-  const newBoard = state.board.map((r, rowIndex) =>
-    r.map((cell, colIndex) =>
-      rowIndex === row && colIndex === col ? state.currentPlayer : cell,
-    ),
-  );
+  const computerChoice = getComputerChoice();
+  const result = determineWinner(playerChoice, computerChoice);
 
-  const winner = checkWinner(newBoard);
-  const gameOver = winner !== null;
-  const nextPlayer = state.currentPlayer === "X" ? "O" : "X";
+  let playerScore = state.playerScore;
+  let computerScore = state.computerScore;
+
+  if (result === "win") {
+    playerScore += 1;
+  } else if (result === "lose") {
+    computerScore += 1;
+  }
+
+  // Game is over after 5 rounds or if someone reaches 3 points
+  const round = state.round + 1;
+  const gameOver = round > 5 || playerScore >= 3 || computerScore >= 3;
 
   return {
-    board: newBoard,
-    currentPlayer: gameOver ? state.currentPlayer : nextPlayer, // Keep current player if game ends
-    winner,
+    playerChoice,
+    computerChoice,
+    result,
+    round,
+    playerScore,
+    computerScore,
     gameOver,
   };
 }
 
-// Basic AI: Tries to win, then block, then picks a random move.
-export function getComputerMove(state: GameState): Position | null {
-  if (state.gameOver || state.currentPlayer === "X") {
-    return null; // Should only be called for 'O's turn when game is active
+export function playAgain(): GameState {
+  return createInitialState();
+}
+
+export function getChoiceEmoji(choice: Choice): string {
+  switch (choice) {
+    case "rock":
+      return "👊";
+    case "paper":
+      return "✋";
+    case "scissors":
+      return "✌️";
+    default:
+      return "❓";
   }
+}
 
-  const availableMoves = getAvailableMoves(state.board);
-  const computerPlayer: Player = "O";
-  const humanPlayer: Player = "X";
-
-  // 1. Check if Computer ('O') can win in the next move
-  for (const move of availableMoves) {
-    const nextBoard = state.board.map((r, rowIndex) =>
-      r.map((cell, colIndex) =>
-        rowIndex === move.row && colIndex === move.col ? computerPlayer : cell,
-      ),
-    );
-    if (checkWinner(nextBoard) === computerPlayer) {
-      return move;
-    }
+export function getResultText(result: Result): string {
+  switch (result) {
+    case "win":
+      return "You win!";
+    case "lose":
+      return "You lose!";
+    case "draw":
+      return "It's a draw!";
+    default:
+      return "Choose your move!";
   }
-
-  // 2. Check if Human ('X') can win in the next move, and block it
-  for (const move of availableMoves) {
-    const nextBoard = state.board.map((r, rowIndex) =>
-      r.map((cell, colIndex) =>
-        rowIndex === move.row && colIndex === move.col ? humanPlayer : cell,
-      ),
-    );
-    if (checkWinner(nextBoard) === humanPlayer) {
-      return move; // Block the opponent's winning move
-    }
-  }
-
-  // 3. Try to take the center
-  if (state.board[1][1] === null) {
-    return { row: 1, col: 1 };
-  }
-
-  // 4. Try to take a corner
-  const corners: Position[] = [
-    { row: 0, col: 0 },
-    { row: 0, col: 2 },
-    { row: 2, col: 0 },
-    { row: 2, col: 2 },
-  ];
-  const availableCorners = corners.filter(
-    (corner) => state.board[corner.row][corner.col] === null,
-  );
-  if (availableCorners.length > 0) {
-    return availableCorners[
-      Math.floor(Math.random() * availableCorners.length)
-    ];
-  }
-
-  // 5. Pick a random available move
-  if (availableMoves.length > 0) {
-    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-  }
-
-  return null; // Should not happen if logic is correct and game isn't over
 }

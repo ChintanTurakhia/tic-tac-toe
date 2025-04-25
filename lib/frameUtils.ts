@@ -1,4 +1,4 @@
-import { GameState } from "./game"; // Assuming game.ts is in the same lib directory
+import { GameState, getChoiceEmoji, getResultText } from "./game";
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
 
@@ -31,35 +31,25 @@ export function getFrameHtml(state: GameState): string {
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   let buttons = "";
-  if (!state.gameOver) {
-    // Use more intuitive button labels for the grid
-    const buttonLabels = [
-      "Top Left",
-      "Top Center",
-      "Top Right",
-      "Middle Left",
-      "Middle Center",
-      "Middle Right",
-      "Bottom Left",
-      "Bottom Center",
-      "Bottom Right",
-    ];
 
-    for (let i = 1; i <= 9; i++) {
-      buttons += `<meta name="fc:frame:button:${i}" content="${buttonLabels[i - 1]}" />\n`;
-    }
-  } else {
+  if (state.gameOver) {
     // Game over state: show a "Play Again" button
-    buttons += '<meta name="fc:frame:button:1" content="Play Again?" />\n';
+    buttons += '<meta name="fc:frame:button:1" content="Play Again" />\n';
+  } else if (state.playerChoice === null) {
+    // Initial state: show Rock, Paper, Scissors buttons
+    buttons += '<meta name="fc:frame:button:1" content="👊 Rock" />\n';
+    buttons += '<meta name="fc:frame:button:2" content="✋ Paper" />\n';
+    buttons += '<meta name="fc:frame:button:3" content="✌️ Scissors" />\n';
+  } else {
+    // After player has made a choice: show Next Round button
+    buttons += '<meta name="fc:frame:button:1" content="Next Round" />\n';
   }
 
-  // Note: Returning only the meta tags might be more useful if embedding in React's Head
-  // But for now, let's keep the full HTML structure for standalone use if needed.
   return `
     <!DOCTYPE html>
     <html>
       <head>
-        <meta property="og:title" content="Tic-Tac-Toe Frame" />
+        <meta property="og:title" content="Rock Paper Scissors" />
         <meta property="og:image" content="${imageUrl}" />
         <meta name="fc:frame" content="vNext" />
         <meta name="fc:frame:image" content="${imageUrl}" />
@@ -68,7 +58,7 @@ export function getFrameHtml(state: GameState): string {
         <meta name="fc:frame:state" content='${JSON.stringify(state)}' />
         ${buttons}
       </head>
-      <body>Tic-Tac-Toe Frame Content (This won't be visible in the frame itself)</body>
+      <body>Rock Paper Scissors Frame (This won't be visible in the frame itself)</body>
     </html>
   `;
 }
@@ -85,7 +75,7 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
 
   const metadata: Record<string, string> = {
-    "og:title": "Tic-Tac-Toe Frame",
+    "og:title": "Rock Paper Scissors",
     "og:image": imageUrl,
     "fc:frame": "vNext",
     "fc:frame:image": imageUrl,
@@ -94,25 +84,14 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
     "fc:frame:state": JSON.stringify(state),
   };
 
-  if (!state.gameOver) {
-    // Use more intuitive button labels for the grid
-    const buttonLabels = [
-      "Top Left",
-      "Top Center",
-      "Top Right",
-      "Middle Left",
-      "Middle Center",
-      "Middle Right",
-      "Bottom Left",
-      "Bottom Center",
-      "Bottom Right",
-    ];
-
-    for (let i = 1; i <= 9; i++) {
-      metadata[`fc:frame:button:${i}`] = buttonLabels[i - 1];
-    }
+  if (state.gameOver) {
+    metadata["fc:frame:button:1"] = "Play Again";
+  } else if (state.playerChoice === null) {
+    metadata["fc:frame:button:1"] = "👊 Rock";
+    metadata["fc:frame:button:2"] = "✋ Paper";
+    metadata["fc:frame:button:3"] = "✌️ Scissors";
   } else {
-    metadata["fc:frame:button:1"] = "Play Again?";
+    metadata["fc:frame:button:1"] = "Next Round";
   }
 
   return metadata;

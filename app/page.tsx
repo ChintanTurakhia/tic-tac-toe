@@ -24,19 +24,7 @@ import { createInitialState } from "../lib/game";
 import { getFrameMetadata } from "../lib/frameUtils";
 
 // Generate initial frame metadata
-// This might need to be done differently if page is fully static
-// For dynamic initial state based on params, this could be in generateMetadata
 const initialMetadata = getFrameMetadata(createInitialState());
-
-// If this page can be a Server Component, metadata export is cleaner:
-/*
-export const metadata: Metadata = {
-  title: 'Tic-Tac-Toe Frame',
-  other: {
-    ...initialMetadata,
-  },
-};
-*/
 
 const Button = ({
   children,
@@ -105,7 +93,6 @@ export default function App() {
           />
         ))}
       </Head>
-      {/* Keep existing layout structure but remove the game board */}
       <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
         <div className="w-full max-w-md mx-auto px-4 py-3">
           <header className="flex justify-between items-center mb-3 h-11">
@@ -131,18 +118,18 @@ export default function App() {
           </header>
 
           <main className="flex-1 flex flex-col items-center justify-center">
-            <h1 className="text-2xl font-bold mb-4">Tic-Tac-Toe Frame</h1>
+            <h1 className="text-2xl font-bold mb-4">Rock Paper Scissors</h1>
             <div className="mb-6">
               <img
                 src={`https://tic-tac-toe-mu-five-58.vercel.app/api/image?state=${encodeURIComponent(JSON.stringify(createInitialState()))}`}
-                alt="Tic-Tac-Toe Game Board"
+                alt="Rock Paper Scissors Game"
                 width="300"
                 height="300"
                 className="border border-gray-300 rounded-md"
               />
             </div>
             <p className="text-center font-medium">
-              This is a preview of the Tic-Tac-Toe game board.
+              This is a preview of the Rock Paper Scissors game.
             </p>
             <div className="mt-4 max-w-md mx-auto p-4 bg-gray-100 rounded-lg">
               <h2 className="text-lg font-bold mb-2">How to Play:</h2>
@@ -155,26 +142,26 @@ export default function App() {
                 </li>
                 <li>
                   <strong>
-                    The cast will display the game board with 9 buttons
+                    The cast will display the game with three buttons
                   </strong>{" "}
-                  labeled with positions (Top Left, Middle Center, etc.) and
-                  numbers (1-9).
+                  for Rock, Paper, and Scissors.
                 </li>
                 <li>
-                  <strong>Players take turns clicking the buttons</strong> to
-                  place their X or O in the corresponding cell.
+                  <strong>Click one of the buttons</strong> to make your choice.
                 </li>
                 <li>
-                  <strong>Player X goes first</strong>, followed by Player O
-                  (computer).
+                  <strong>The computer will make its choice</strong> and the
+                  result will be displayed.
                 </li>
                 <li>
-                  <strong>After each move, the frame updates</strong> to show
-                  the new board state.
+                  <strong>
+                    Click &quot;Next Round&quot; to continue playing
+                  </strong>{" "}
+                  until someone reaches 3 points or 5 rounds are completed.
                 </li>
                 <li>
-                  <strong>The game automatically detects wins or draws</strong>{" "}
-                  and offers a &quot;Play Again&quot; button.
+                  <strong>At the end of the game</strong>, click &quot;Play
+                  Again&quot; to start a new game.
                 </li>
               </ol>
               <p className="mt-3 text-sm italic">
@@ -183,8 +170,8 @@ export default function App() {
               </p>
               <div className="mt-4 p-2 bg-blue-50 border border-blue-200 rounded">
                 <p className="text-sm text-blue-800">
-                  <strong>Tip:</strong> Each empty cell shows its position name
-                  and button number to help you make your move.
+                  <strong>Tip:</strong> Rock beats Scissors, Scissors beats
+                  Paper, and Paper beats Rock.
                 </p>
               </div>
             </div>
