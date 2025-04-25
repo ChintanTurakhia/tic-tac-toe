@@ -32,9 +32,21 @@ export function getFrameHtml(state: GameState): string {
 
   let buttons = "";
   if (!state.gameOver) {
-    // Simple approach: 1 button for each cell (1-9)
+    // Use more intuitive button labels for the grid
+    const buttonLabels = [
+      "Top Left",
+      "Top Center",
+      "Top Right",
+      "Middle Left",
+      "Middle Center",
+      "Middle Right",
+      "Bottom Left",
+      "Bottom Center",
+      "Bottom Right",
+    ];
+
     for (let i = 1; i <= 9; i++) {
-      buttons += `<meta name="fc:frame:button:${i}" content="Cell ${i}" />\n`;
+      buttons += `<meta name="fc:frame:button:${i}" content="${buttonLabels[i - 1]}" />\n`;
     }
   } else {
     // Game over state: show a "Play Again" button
@@ -83,8 +95,21 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   };
 
   if (!state.gameOver) {
+    // Use more intuitive button labels for the grid
+    const buttonLabels = [
+      "Top Left",
+      "Top Center",
+      "Top Right",
+      "Middle Left",
+      "Middle Center",
+      "Middle Right",
+      "Bottom Left",
+      "Bottom Center",
+      "Bottom Right",
+    ];
+
     for (let i = 1; i <= 9; i++) {
-      metadata[`fc:frame:button:${i}`] = `Cell ${i}`;
+      metadata[`fc:frame:button:${i}`] = buttonLabels[i - 1];
     }
   } else {
     metadata["fc:frame:button:1"] = "Play Again?";

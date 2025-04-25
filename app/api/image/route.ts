@@ -62,12 +62,27 @@ function generateGameBoardSVG(state: GameState): string {
     <!-- Game pieces -->
     <g>`;
 
-  // Add X's and O's
+  // Add position indicators and X's and O's
+  const positions = [
+    "Top Left",
+    "Top Center",
+    "Top Right",
+    "Middle Left",
+    "Middle Center",
+    "Middle Right",
+    "Bottom Left",
+    "Bottom Center",
+    "Bottom Right",
+  ];
+
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 3; col++) {
       const cell = board[row][col];
       const centerX = col * cellSize + cellSize / 2;
       const centerY = row * cellSize + cellSize / 2;
+      const posIndex = row * 3 + col;
+      const posName = positions[posIndex];
+      const buttonNumber = posIndex + 1;
 
       if (cell === "X") {
         // Draw X
@@ -80,6 +95,11 @@ function generateGameBoardSVG(state: GameState): string {
         // Draw O
         svg += `
         <circle cx="${centerX}" cy="${centerY}" r="${xoSize}" fill="none" stroke="#2196F3" stroke-width="${lineWidth}" />`;
+      } else if (!gameOver) {
+        // For empty cells, add position indicator if game is not over
+        svg += `
+        <text x="${centerX}" y="${centerY - 15}" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">${posName}</text>
+        <text x="${centerX}" y="${centerY + 15}" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#666" text-anchor="middle">${buttonNumber}</text>`;
       }
     }
   }

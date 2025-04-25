@@ -144,13 +144,50 @@ export default function App() {
             <p className="text-center font-medium">
               This is a preview of the Tic-Tac-Toe game board.
             </p>
-            <p className="text-center mt-2">
-              This is a Farcaster Frame for playing Tic-Tac-Toe.
-            </p>
-            <p className="text-center mt-2">
-              Share the link in a cast to play! The game is played through the
-              Farcaster Frame, not directly on this website.
-            </p>
+            <div className="mt-4 max-w-md mx-auto p-4 bg-gray-100 rounded-lg">
+              <h2 className="text-lg font-bold mb-2">How to Play:</h2>
+              <ol className="list-decimal pl-5 space-y-2 text-left">
+                <li>
+                  <strong>Share this URL in a Farcaster cast:</strong>
+                  <code className="block bg-white p-2 mt-1 rounded text-sm overflow-x-auto">
+                    https://tic-tac-toe-mu-five-58.vercel.app
+                  </code>
+                </li>
+                <li>
+                  <strong>
+                    The cast will display the game board with 9 buttons
+                  </strong>{" "}
+                  labeled with positions (Top Left, Middle Center, etc.) and
+                  numbers (1-9).
+                </li>
+                <li>
+                  <strong>Players take turns clicking the buttons</strong> to
+                  place their X or O in the corresponding cell.
+                </li>
+                <li>
+                  <strong>Player X goes first</strong>, followed by Player O
+                  (computer).
+                </li>
+                <li>
+                  <strong>After each move, the frame updates</strong> to show
+                  the new board state.
+                </li>
+                <li>
+                  <strong>The game automatically detects wins or draws</strong>{" "}
+                  and offers a &quot;Play Again&quot; button.
+                </li>
+              </ol>
+              <p className="mt-3 text-sm italic">
+                Note: The game can only be played through a Farcaster Frame
+                embedded in a cast, not directly on this website.
+              </p>
+              <div className="mt-4 p-2 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-sm text-blue-800">
+                  <strong>Tip:</strong> Each empty cell shows its position name
+                  and button number to help you make your move.
+                </p>
+              </div>
+            </div>
           </main>
 
           <footer className="mt-2 pt-4 flex justify-center">
