@@ -1,4 +1,4 @@
-import { GameState, getChoiceEmoji, getResultText } from "./game";
+import { GameState } from "./game";
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
 
