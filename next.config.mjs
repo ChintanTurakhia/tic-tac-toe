@@ -6,6 +6,14 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "tic-tac-toe-mu-five-58.vercel.app",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

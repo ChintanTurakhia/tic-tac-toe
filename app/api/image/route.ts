@@ -61,19 +61,18 @@ function generateGameSVG(state: GameState): string {
     <text x="${width / 2}" y="60" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${textColor}" text-anchor="middle">Rock Paper Scissors</text>
     
     <!-- Score -->
-    <text x="${width / 2}" y="110" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Round ${state.round} of 5 | Score: You ${state.playerScore} - ${state.computerScore} Computer</text>
-    
-    <!-- Game area -->
-    <g>`;
+    <text x="${width / 2}" y="110" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Round ${state.round} of 5 | Score: You ${state.playerScore} - ${state.computerScore} Computer</text>`;
 
+  // Initial state - show instructions
   if (state.playerChoice === null) {
-    // Initial state - show instructions
     svg += `
       <text x="${width / 2}" y="${height / 2}" font-family="Arial, sans-serif" font-size="32" fill="${textColor}" text-anchor="middle">Choose your move!</text>
       <text x="${width / 2}" y="${height / 2 + 60}" font-family="Arial, sans-serif" font-size="24" fill="${accentColor}" text-anchor="middle">👊 Rock | ✋ Paper | ✌️ Scissors</text>
+      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click a button below to make your choice</text>
     `;
-  } else {
-    // Show choices and result
+  }
+  // Show result of the round
+  else if (!state.gameOver) {
     const playerEmoji = getChoiceEmoji(state.playerChoice);
     const computerEmoji = getChoiceEmoji(state.computerChoice);
     const resultText = getResultText(state.result);
@@ -110,11 +109,11 @@ function generateGameSVG(state: GameState): string {
     svg += `
       <rect x="100" y="${height - 150}" width="${width - 200}" height="80" rx="15" fill="rgba(0,0,0,0.3)" />
       <text x="${width / 2}" y="${height - 100}" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="${resultColor}" text-anchor="middle">${resultText}</text>
+      <text x="${width / 2}" y="${height - 40}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Next Round" to continue</text>
     `;
   }
-
   // Game over state
-  if (state.gameOver) {
+  else {
     let finalResult = "";
     let finalColor = accentColor;
 
@@ -129,34 +128,19 @@ function generateGameSVG(state: GameState): string {
       finalColor = drawColor;
     }
 
+    // Game over overlay
     svg += `
       <rect x="0" y="0" width="${width}" height="${height}" fill="rgba(0,0,0,0.7)" />
       <rect x="50" y="${height / 2 - 100}" width="${width - 100}" height="200" rx="20" fill="${bgColor}" stroke="${finalColor}" stroke-width="4" />
       <text x="${width / 2}" y="${height / 2 - 30}" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${finalColor}" text-anchor="middle">Game Over</text>
       <text x="${width / 2}" y="${height / 2 + 30}" font-family="Arial, sans-serif" font-size="28" fill="${textColor}" text-anchor="middle">${finalResult}</text>
       <text x="${width / 2}" y="${height / 2 + 80}" font-family="Arial, sans-serif" font-size="24" fill="${accentColor}" text-anchor="middle">Final Score: You ${state.playerScore} - ${state.computerScore} Computer</text>
+      <text x="${width / 2}" y="${height - 40}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Play Again" to start a new game</text>
     `;
   }
 
-  // Instructions for buttons
-  if (!state.gameOver && state.playerChoice === null) {
-    svg += `
-      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click a button below to make your choice</text>
-    `;
-  } else if (!state.gameOver && state.playerChoice !== null) {
-    svg += `
-      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Next Round" to continue</text>
-    `;
-  } else {
-    svg += `
-      <text x="${width / 2}" y="${height - 60}" font-family="Arial, sans-serif" font-size="20" fill="${accentColor}" text-anchor="middle">Click "Play Again" to start a new game</text>
-    `;
-  }
-
-  // Close SVG tags
-  svg += `
-    </g>
-  </svg>`;
+  // Close SVG
+  svg += `</svg>`;
 
   return svg;
 }

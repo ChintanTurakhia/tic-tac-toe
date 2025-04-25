@@ -1,10 +1,10 @@
 {
   "frame": {
     "version": "vNext",
-    "name": "Tic-Tac-Toe",
+    "name": "Rock Paper Scissors",
     "iconUrl": "https://tic-tac-toe-mu-five-58.vercel.app/icon.png",
     "splashImageUrl": "https://tic-tac-toe-mu-five-58.vercel.app/splash.png",
-    "splashBackgroundColor": "#ffffff",
+    "splashBackgroundColor": "#1E293B",
     "homeUrl": "https://tic-tac-toe-mu-five-58.vercel.app/api/frame"
   }
 }
