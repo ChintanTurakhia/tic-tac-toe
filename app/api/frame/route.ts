@@ -5,7 +5,7 @@ import {
   makeChoice,
   playAgain,
 } from "../../../lib/game";
-import { FrameRequest, getFrameHtml } from "../../../lib/frameUtils";
+import { getFrameHtml } from "../../../lib/frameUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(_req: NextRequest): Promise<NextResponse> {
@@ -21,66 +21,46 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   console.log("POST request received for frame interaction");
-  let state: GameState;
+  let state: GameState = createInitialState();
   let buttonIndex: number | undefined;
 
   try {
-    // Log the raw request for debugging
-    const rawBody = await req.text();
-    console.log("Raw request body:", rawBody);
+    // Get the request body
+    const body = await req.json();
+    console.log("Request body:", JSON.stringify(body));
 
-    // Parse the JSON body
-    const body: FrameRequest = JSON.parse(rawBody);
-    console.log("Parsed request body:", JSON.stringify(body));
+    // Extract the button index and state from the request
+    const untrustedData = body.untrustedData;
+    const trustedData = body.trustedData?.message;
 
-    // Extract message data from trusted or untrusted data
-    const message = body?.trustedData?.message ?? body?.untrustedData;
-    console.log("Extracted message:", JSON.stringify(message));
+    // Use trusted data if available, otherwise use untrusted data
+    const data = trustedData || untrustedData;
+    buttonIndex = data?.button;
+    const stateString = data?.state;
 
-    buttonIndex = message?.button;
     console.log("Button pressed:", buttonIndex);
+    console.log(
+      "State string:",
+      stateString ? stateString.substring(0, 100) + "..." : "null",
+    );
 
-    // Get state from the message
-    const stateString = message?.state;
-    console.log("Raw state string:", stateString);
-
+    // Parse the state if it exists
     if (stateString) {
       try {
-        // Try different parsing approaches
+        // Try to decode the state first, then parse it
+        const decodedState = decodeURIComponent(stateString);
+        state = JSON.parse(decodedState);
+        console.log("State parsed successfully");
+      } catch {
+        // If decoding fails, try parsing directly
         try {
-          // First try direct parsing
           state = JSON.parse(stateString);
+          console.log("State parsed successfully (without decoding)");
         } catch (error) {
-          // If that fails, try decoding first
-          console.log(
-            "Direct parsing failed, trying with decoding:",
-            error instanceof Error ? error.message : String(error),
-          );
-          state = JSON.parse(decodeURIComponent(stateString));
+          console.error("Failed to parse state:", error);
+          state = createInitialState();
         }
-
-        console.log("Successfully parsed state:", JSON.stringify(state));
-
-        // Basic sanity check
-        if (
-          typeof state.playerChoice === "undefined" &&
-          typeof state.computerChoice === "undefined"
-        ) {
-          console.log("State failed sanity check, using initial state");
-          throw new Error("Invalid state format");
-        }
-      } catch (e) {
-        console.error(
-          "Error deserializing state:",
-          e,
-          "State string:",
-          stateString,
-        );
-        state = createInitialState(); // Reset if state is invalid
       }
-    } else {
-      console.log("No state found, using initial state.");
-      state = createInitialState();
     }
 
     // Handle button presses based on game state

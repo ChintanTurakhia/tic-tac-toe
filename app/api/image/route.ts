@@ -53,15 +53,16 @@ function generateGameSVG(state: GameState): string {
   const loseColor = "#EF4444"; // Red for lose
   const drawColor = "#F59E0B"; // Amber for draw
 
-  // Start SVG
-  let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${width}" height="${height}" fill="${bgColor}" />
-    
-    <!-- Title -->
-    <text x="${width / 2}" y="60" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${textColor}" text-anchor="middle">Rock Paper Scissors</text>
-    
-    <!-- Score -->
-    <text x="${width / 2}" y="110" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Round ${state.round} of 5 | Score: You ${state.playerScore} - ${state.computerScore} Computer</text>`;
+  // Start SVG with a clean structure
+  let svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="${width}" height="${height}" fill="${bgColor}" />
+  
+  <!-- Title -->
+  <text x="${width / 2}" y="60" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="${textColor}" text-anchor="middle">Rock Paper Scissors</text>
+  
+  <!-- Score -->
+  <text x="${width / 2}" y="110" font-family="Arial, sans-serif" font-size="24" fill="${textColor}" text-anchor="middle">Round ${state.round} of 5 | Score: You ${state.playerScore} - ${state.computerScore} Computer</text>`;
 
   // Initial state - show instructions
   if (state.playerChoice === null) {

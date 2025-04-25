@@ -121,15 +121,16 @@ export default function App() {
           <main className="flex-1 flex flex-col items-center justify-center">
             <h1 className="text-2xl font-bold mb-4">Rock Paper Scissors</h1>
             <div className="mb-6">
-              <Image
-                src={`/api/image?state=${encodeURIComponent(JSON.stringify(createInitialState()))}`}
-                alt="Rock Paper Scissors Game"
-                width={300}
-                height={300}
-                className="border border-gray-300 rounded-md shadow-md"
-                unoptimized
-                priority
-              />
+              <div className="relative w-[300px] h-[300px] border border-gray-300 rounded-md shadow-md overflow-hidden">
+                <Image
+                  src={`/api/image?state=${encodeURIComponent(JSON.stringify(createInitialState()))}`}
+                  alt="Rock Paper Scissors Game"
+                  fill
+                  className="object-cover"
+                  unoptimized
+                  priority
+                />
+              </div>
             </div>
             <p className="text-center font-medium">
               This is a preview of the Rock Paper Scissors game.

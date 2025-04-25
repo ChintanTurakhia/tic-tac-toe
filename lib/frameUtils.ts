@@ -57,22 +57,23 @@ export function getFrameHtml(state: GameState): string {
     buttons += '<meta name="fc:frame:button:1" content="Next Round" />\n';
   }
 
+  // Simplified frame HTML with correct meta tag format
   return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content="${imageUrl}" />
-        <meta property="fc:frame:image:aspect_ratio" content="1:1" />
-        <meta property="fc:frame:post_url" content="${postUrl}" />
-        <meta property="fc:frame:state" content="${encodeURIComponent(JSON.stringify(state))}" />
-        ${buttons}
-        <meta property="og:title" content="Rock Paper Scissors" />
-        <meta property="og:image" content="${imageUrl}" />
-      </head>
-      <body>Rock Paper Scissors Frame</body>
-    </html>
-  `;
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rock Paper Scissors</title>
+    <meta property="og:title" content="Rock Paper Scissors" />
+    <meta property="og:image" content="${imageUrl}" />
+    <meta name="fc:frame" content="vNext" />
+    <meta name="fc:frame:image" content="${imageUrl}" />
+    <meta name="fc:frame:image:aspect_ratio" content="1:1" />
+    <meta name="fc:frame:post_url" content="${postUrl}" />
+    <meta name="fc:frame:state" content="${encodeURIComponent(JSON.stringify(state))}" />
+    ${buttons}
+  </head>
+  <body>Rock Paper Scissors Frame</body>
+</html>`;
 }
 
 // Helper to extract meta tags for embedding in React Head
@@ -86,14 +87,15 @@ export function getFrameMetadata(state: GameState): Record<string, string> {
   console.log("[getFrameMetadata] Generated Image URL:", imageUrl);
   const postUrl = `${BASE_URL}/api/frame`;
 
+  // Use the same format as in the HTML
   const metadata: Record<string, string> = {
+    "og:title": "Rock Paper Scissors",
+    "og:image": imageUrl,
     "fc:frame": "vNext",
     "fc:frame:image": imageUrl,
     "fc:frame:image:aspect_ratio": "1:1",
     "fc:frame:post_url": postUrl,
     "fc:frame:state": encodeURIComponent(JSON.stringify(state)),
-    "og:title": "Rock Paper Scissors",
-    "og:image": imageUrl,
   };
 
   if (state.gameOver) {
