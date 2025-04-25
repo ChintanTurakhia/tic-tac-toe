@@ -126,8 +126,9 @@ export default function App() {
                 alt="Rock Paper Scissors Game"
                 width={300}
                 height={300}
-                className="border border-gray-300 rounded-md"
+                className="border border-gray-300 rounded-md shadow-md"
                 unoptimized
+                priority
               />
             </div>
             <p className="text-center font-medium">

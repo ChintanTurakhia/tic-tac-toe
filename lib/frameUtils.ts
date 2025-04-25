@@ -1,6 +1,18 @@
 import { GameState } from "./game";
 
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
+// More robust URL handling
+function getBaseUrl(): string {
+  const url = process.env.NEXT_PUBLIC_URL;
+  if (!url) {
+    console.warn("NEXT_PUBLIC_URL not set, using fallback localhost URL");
+    return "http://localhost:3000";
+  }
+
+  // Ensure URL doesn't have trailing slash
+  return url.endsWith("/") ? url.slice(0, -1) : url;
+}
+
+const BASE_URL = getBaseUrl();
 
 // Basic type definition for FrameRequest body (replace with proper validation later)
 export interface FrameMessage {
@@ -22,13 +34,13 @@ export interface FrameRequest {
 // Function to generate frame HTML meta tags
 export function getFrameHtml(state: GameState): string {
   console.log("[getFrameHtml] State received:", JSON.stringify(state)); // Log incoming state
-  console.log("[getFrameHtml] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
+  console.log("[getFrameHtml] BASE_URL:", BASE_URL); // Log URL used
 
   // Pass state as a query parameter to the image route
   const stateParam = encodeURIComponent(JSON.stringify(state));
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${stateParam}`;
+  const imageUrl = `${BASE_URL}/api/image?state=${stateParam}`;
   console.log("[getFrameHtml] Generated Image URL:", imageUrl);
-  const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
+  const postUrl = `${BASE_URL}/api/frame`;
 
   let buttons = "";
 
@@ -49,16 +61,16 @@ export function getFrameHtml(state: GameState): string {
     <!DOCTYPE html>
     <html>
       <head>
+        <meta property="fc:frame" content="vNext" />
+        <meta property="fc:frame:image" content="${imageUrl}" />
+        <meta property="fc:frame:image:aspect_ratio" content="1:1" />
+        <meta property="fc:frame:post_url" content="${postUrl}" />
+        <meta property="fc:frame:state" content="${encodeURIComponent(JSON.stringify(state))}" />
+        ${buttons}
         <meta property="og:title" content="Rock Paper Scissors" />
         <meta property="og:image" content="${imageUrl}" />
-        <meta name="fc:frame" content="vNext" />
-        <meta name="fc:frame:image" content="${imageUrl}" />
-        <meta name="fc:frame:image:aspect_ratio" content="1:1" />
-        <meta name="fc:frame:post_url" content="${postUrl}" />
-        <meta name="fc:frame:state" content='${JSON.stringify(state)}' />
-        ${buttons}
       </head>
-      <body>Rock Paper Scissors Frame (This won't be visible in the frame itself)</body>
+      <body>Rock Paper Scissors Frame</body>
     </html>
   `;
 }
@@ -66,22 +78,22 @@ export function getFrameHtml(state: GameState): string {
 // Helper to extract meta tags for embedding in React Head
 export function getFrameMetadata(state: GameState): Record<string, string> {
   console.log("[getFrameMetadata] State received:", JSON.stringify(state)); // Log incoming state
-  console.log("[getFrameMetadata] NEXT_PUBLIC_URL:", NEXT_PUBLIC_URL); // Log URL used
+  console.log("[getFrameMetadata] BASE_URL:", BASE_URL); // Log URL used
 
   // Pass state as a query parameter to the image route
   const stateParam = encodeURIComponent(JSON.stringify(state));
-  const imageUrl = `${NEXT_PUBLIC_URL}/api/image?state=${stateParam}`;
+  const imageUrl = `${BASE_URL}/api/image?state=${stateParam}`;
   console.log("[getFrameMetadata] Generated Image URL:", imageUrl);
-  const postUrl = `${NEXT_PUBLIC_URL}/api/frame`;
+  const postUrl = `${BASE_URL}/api/frame`;
 
   const metadata: Record<string, string> = {
-    "og:title": "Rock Paper Scissors",
-    "og:image": imageUrl,
     "fc:frame": "vNext",
     "fc:frame:image": imageUrl,
     "fc:frame:image:aspect_ratio": "1:1",
     "fc:frame:post_url": postUrl,
-    "fc:frame:state": JSON.stringify(state),
+    "fc:frame:state": encodeURIComponent(JSON.stringify(state)),
+    "og:title": "Rock Paper Scissors",
+    "og:image": imageUrl,
   };
 
   if (state.gameOver) {

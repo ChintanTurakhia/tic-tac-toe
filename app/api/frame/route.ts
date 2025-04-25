@@ -25,23 +25,48 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   let buttonIndex: number | undefined;
 
   try {
-    const body: FrameRequest = await req.json();
-    // For now, bypass validation and parse manually (less secure)
-    // Use untrustedData as fallback if trustedData isn't populated without validation
+    // Log the raw request for debugging
+    const rawBody = await req.text();
+    console.log("Raw request body:", rawBody);
+
+    // Parse the JSON body
+    const body: FrameRequest = JSON.parse(rawBody);
+    console.log("Parsed request body:", JSON.stringify(body));
+
+    // Extract message data from trusted or untrusted data
     const message = body?.trustedData?.message ?? body?.untrustedData;
+    console.log("Extracted message:", JSON.stringify(message));
+
     buttonIndex = message?.button;
-    // Frame spec indicates state should be string. Let's trust that.
+    console.log("Button pressed:", buttonIndex);
+
+    // Get state from the message
     const stateString = message?.state;
+    console.log("Raw state string:", stateString);
 
     if (stateString) {
       try {
-        state = JSON.parse(stateString); // Assuming it's just JSON string
-        console.log("Deserialized state:", state);
+        // Try different parsing approaches
+        try {
+          // First try direct parsing
+          state = JSON.parse(stateString);
+        } catch (error) {
+          // If that fails, try decoding first
+          console.log(
+            "Direct parsing failed, trying with decoding:",
+            error instanceof Error ? error.message : String(error),
+          );
+          state = JSON.parse(decodeURIComponent(stateString));
+        }
+
+        console.log("Successfully parsed state:", JSON.stringify(state));
+
         // Basic sanity check
         if (
           typeof state.playerChoice === "undefined" &&
           typeof state.computerChoice === "undefined"
         ) {
+          console.log("State failed sanity check, using initial state");
           throw new Error("Invalid state format");
         }
       } catch (e) {
