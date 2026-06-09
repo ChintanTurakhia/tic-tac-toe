@@ -1,0 +1,42 @@
+// A bright, kid-friendly color palette.
+export const PALETTE: { name: string; hex: string }[] = [
+  { name: "Sunshine", hex: "#FACC15" },
+  { name: "Tangerine", hex: "#FB923C" },
+  { name: "Tomato", hex: "#EF4444" },
+  { name: "Bubblegum", hex: "#F472B6" },
+  { name: "Grape", hex: "#A855F7" },
+  { name: "Blueberry", hex: "#3B82F6" },
+  { name: "Sky", hex: "#38BDF8" },
+  { name: "Mint", hex: "#34D399" },
+  { name: "Grass", hex: "#22C55E" },
+  { name: "Chocolate", hex: "#92400E" },
+  { name: "Cloud", hex: "#FFFFFF" },
+  { name: "Storm", hex: "#9CA3AF" },
+  { name: "Ink", hex: "#111827" },
+  { name: "Peach", hex: "#FBCFE8" },
+  { name: "Lemonade", hex: "#FEF08A" },
+  { name: "Ocean", hex: "#0EA5E9" },
+];
+
+// Map friendly color words (used by the "Describe" feature) to a hex value.
+export const COLOR_WORDS: Record<string, string> = {
+  yellow: "#FACC15",
+  gold: "#FACC15",
+  golden: "#FACC15",
+  orange: "#FB923C",
+  red: "#EF4444",
+  pink: "#F472B6",
+  purple: "#A855F7",
+  violet: "#A855F7",
+  blue: "#3B82F6",
+  sky: "#38BDF8",
+  cyan: "#38BDF8",
+  teal: "#34D399",
+  mint: "#34D399",
+  green: "#22C55E",
+  brown: "#92400E",
+  white: "#FFFFFF",
+  gray: "#9CA3AF",
+  grey: "#9CA3AF",
+  black: "#111827",
+};

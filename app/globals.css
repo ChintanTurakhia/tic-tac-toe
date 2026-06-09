@@ -3,23 +3,107 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  --sky: #7dd3fc;
+  --grape: #a855f7;
+  --bubble: #f472b6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111111;
-    --foreground: #ffffff;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: "Geist", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 80%;
+  margin: 0;
+  font-family:
+    ui-rounded, "Nunito", "Baloo 2", "Comic Sans MS", system-ui, -apple-system,
+    sans-serif;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #fde68a55, transparent),
+    radial-gradient(900px 500px at 110% 10%, #a5b4fc55, transparent),
+    linear-gradient(160deg, #fef9ff 0%, #eef6ff 50%, #fff1f7 100%);
+  background-attachment: fixed;
+}
+
+/* Chunky, kid-friendly focus rings */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Disable text selection on the painting grid so dragging paints smoothly */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.28s ease-out both;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+.animate-wiggle {
+  animation: wiggle 0.6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-floaty {
+  animation: floaty 3s ease-in-out infinite;
+}
+
+/* Confetti */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 1;
+  }
+}
+.confetti-piece {
+  position: fixed;
+  top: 0;
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  z-index: 60;
+  animation-name: confetti-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
 }

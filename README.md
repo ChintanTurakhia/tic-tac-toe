@@ -1,104 +1,74 @@
-# MiniKit Template
+# 🎨 Emoji Studio
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-onchain --mini`](), configured with:
+A fun, interactive, kid-friendly studio for designing your very own emoji — then
+"publishing" it to the (pretend) official Emoji Specifications Body!
 
-- [MiniKit](https://docs.base.org/builderkits/minikit/overview)
-- [OnchainKit](https://www.base.org/builders/onchainkit)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Next.js](https://nextjs.org/docs)
+Built with [Next.js](https://nextjs.org) + [Tailwind CSS](https://tailwindcss.com).
+Everything runs in the browser — no accounts, no backend, no API keys.
 
-## Getting Started
+## ✨ What you can do
 
-1. Install dependencies:
+There are **three ways to create** an emoji, all feeding the same canvas:
+
+1. **Draw it** 🖌️ — paint on a chunky 16×16 pixel grid with a bright color
+   palette. Tools: Draw, Fill (bucket), Erase, Undo, and Clear. Click-and-drag
+   works with mouse *and* touch.
+2. **Remix an existing one** 🐱 — load a starter emoji (Smiley, Heart, Star,
+   Kitty, Ghost, Rainbow) and change it however you like. Or hit **🎲 Surprise
+   me!** for a random recolored starter.
+3. **Describe it with words** 💬 — type something like *"a blue happy cat"* or
+   *"spooky purple ghost"* and the studio assembles a starting emoji, picks the
+   colors, and even names it.
+
+Then **publish** 🚀:
+
+- Fill in a fun, real-ish emoji **proposal form** (name, artist, why it should
+  exist).
+- Get a celebratory **certificate** with confetti and a playful `U+1F…`
+  codepoint.
+- **Download** your emoji as a 512×512 transparent **PNG** and a text
+  **proposal document**.
+- Your creations are saved to a **gallery** (in your browser) where you can
+  remix or delete them.
+
+> 🧠 **Real-world tie-in:** the app links to the actual
+> [Unicode Consortium emoji proposal process](https://www.unicode.org/emoji/proposals.html)
+> so curious kids can learn how real emoji are made — anyone can submit one for free!
+
+## 🚀 Getting started
+
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
-```
-
-2. Verify environment variables, these will be set up by the `npx create-onchain --mini` command:
-
-You can regenerate the FARCASTER Account Assocation environment variables by running `npx create-onchain --manifest` in your project directory.
-
-The environment variables enable the following features:
-
-- Frame metadata - Sets up the Frame Embed that will be shown when you cast your frame
-- Account assocation - Allows users to add your frame to their account, enables notifications
-- Redis API keys - Enable Webhooks and background notifications for your application by storing users notification details
-
-```bash
-# Required for Frame metadata
-NEXT_PUBLIC_URL=
-NEXT_PUBLIC_VERSION=
-NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME=
-NEXT_PUBLIC_ICON_URL=
-NEXT_PUBLIC_IMAGE_URL=
-NEXT_PUBLIC_SPLASH_IMAGE_URL=
-NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR=
-
-# Required to allow users to add your frame
-FARCASTER_HEADER=
-FARCASTER_PAYLOAD=
-FARCASTER_SIGNATURE=
-
-# Required for webhooks and background notifications
-REDIS_URL=
-REDIS_TOKEN=
-```
-
-3. Start the development server:
-```bash
 npm run dev
 ```
 
-## Template Features
+Then open [http://localhost:3000](http://localhost:3000).
 
-### Frame Configuration
-- `.well-known/farcaster.json` endpoint configured for Frame metadata and account association
-- Frame metadata automatically added to page headers in `layout.tsx`
+```bash
+npm run build   # production build
+npm start       # run the production build
+```
 
-### Background Notifications
-- Redis-backed notification system using Upstash
-- Ready-to-use notification endpoints in `api/notify` and `api/webhook`
-- Notification client utilities in `lib/notification-client.ts`
+## 🗂️ Project structure
 
-### Theming
-- Custom theme defined in `theme.css` with OnchainKit variables
-- Pixel font integration with Pixelify Sans
-- Dark/light mode support through OnchainKit
+```
+app/
+  page.tsx                 # entry point — renders the studio
+  layout.tsx               # metadata + global styles
+  globals.css              # kid-friendly theme, animations, confetti
+  components/
+    EmojiStudio.tsx        # main orchestrator (state, tools, layout)
+    PixelCanvas.tsx        # the 16x16 drawing surface (pointer/touch)
+    PublishModal.tsx       # proposal form + certificate + downloads
+    Gallery.tsx            # published-emoji gallery
+    Confetti.tsx           # dependency-free confetti burst
+  lib/
+    types.ts               # grid model + PublishedEmoji type
+    palette.ts             # color palette + color-word mapping
+    templates.ts           # pixel-art starter emoji (string art + parser)
+    describe.ts            # words -> emoji + colors + name
+    export.ts              # grid -> PNG, downloads, codepoints
+    storage.ts             # gallery localStorage + proposal text
+```
 
-### MiniKit Provider
-The app is wrapped with `MiniKitProvider` in `providers.tsx`, configured with:
-- OnchainKit integration
-- Access to Frames context
-- Sets up Wagmi Connectors
-- Sets up Frame SDK listeners
-- Applies Safe Area Insets
-
-## Customization
-
-To get started building your own frame, follow these steps:
-
-1. Remove the DemoComponents:
-   - Delete `components/DemoComponents.tsx`
-   - Remove demo-related imports from `page.tsx`
-
-2. Start building your Frame:
-   - Modify `page.tsx` to create your Frame UI
-   - Update theme variables in `theme.css`
-   - Adjust MiniKit configuration in `providers.tsx`
-
-3. Add your frame to your account:
-   - Cast your frame to see it in action
-   - Share your frame with others to start building your community
-
-## Learn More
-
-- [MiniKit Documentation](https://docs.base.org/builderkits/minikit/overview)
-- [OnchainKit Documentation](https://docs.base.org/builderkits/onchainkit/getting-started)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+Have fun, and keep drawing! 🌈
