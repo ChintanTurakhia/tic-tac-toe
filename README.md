@@ -22,18 +22,28 @@ There are **three ways to create** an emoji, all feeding the same canvas:
 
 Then **publish** 🚀:
 
-- Fill in a fun, real-ish emoji **proposal form** (name, artist, why it should
-  exist).
+- Fill in a fun emoji **proposal form** (name, artist, why it should exist).
 - Get a celebratory **certificate** with confetti and a playful `U+1F…`
   codepoint.
-- **Download** your emoji as a 512×512 transparent **PNG** and a text
-  **proposal document**.
+- Generate a **real Unicode® emoji proposal package** in the actual format the
+  [Unicode Consortium](https://www.unicode.org/emoji/proposals.html) requires:
+  - A printable **proposal document** (HTML → *Print → Save as PDF*) with every
+    required section — Identification (CLDR short name, keywords, category),
+    Images, Selection Factors for **Inclusion** (compatibility, expected usage
+    level + frequency-evidence table, distinctiveness, completeness) and
+    **Exclusion**, and Other Information. The parts that need real-world
+    evidence are pre-marked with helpful prompts.
+  - The **four required spec images**: color & black-and-white at **18×18** and
+    **72×72** px.
+  - A direct link to **submit it for real** via the official submission form.
+- Also **download** your emoji as a 512×512 transparent **PNG**.
 - Your creations are saved to a **gallery** (in your browser) where you can
   remix or delete them.
 
-> 🧠 **Real-world tie-in:** the app links to the actual
-> [Unicode Consortium emoji proposal process](https://www.unicode.org/emoji/proposals.html)
-> so curious kids can learn how real emoji are made — anyone can submit one for free!
+> 🧠 **It's a real submission path.** The generated document follows Unicode's
+> official *Form for Emoji Proposals*. Anyone can submit a proposal for free
+> during the open window (currently **April 2 – July 31, 2026**). An adult
+> should help with the actual submission — it's the real thing!
 
 ## 🚀 Getting started
 
